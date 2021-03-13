@@ -10,6 +10,7 @@
     "dev": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack serve"
   },
   "dependencies": {
+    "@emotion/babel-plugin": "^11.2.0",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
