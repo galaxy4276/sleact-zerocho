@@ -1,9 +1,8 @@
-import { apiClient } from '../client';
+import apiClient from '@utils/apliClient';
 
-const fetcher = (url: string) => {
+const fetcher = (url: string) =>
   apiClient.get(url, {
     withCredentials: true,
-  }).then((res) => res.data);
-};
+  }).then(({ data }) => data);
 
 export default fetcher;

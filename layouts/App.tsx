@@ -4,6 +4,7 @@ import loadable from '@loadable/component';
 
 const LogIn = loadable(() => import('@pages/login'));
 const SignUp = loadable(() => import('@pages/signup'));
+const Channel = loadable(() => import('@pages/Channel'));
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
       <Redirect path='/' to='/login' exact />
       <Route path='/login' component={LogIn} />
       <Route path='/signup' component={SignUp} />
+      <Route path='/workspace/channel' component={Channel} />
     </Switch>
   );
 };

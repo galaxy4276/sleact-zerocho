@@ -5,7 +5,6 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'; // ts ê
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
-console.log(`isDevelopment: ${isDevelopment}`);
 
 const config: webpack.Configuration = {
   name: 'sleact',
@@ -91,6 +90,7 @@ if (isDevelopment && config.plugins) {
   config.plugins.push(new ReactRefreshWebpackPlugin());
   // config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: true }));
 }
+
 if (!isDevelopment && config.plugins) {
   // config.plugins.push(new webpack.LoaderOptionsPlugin({ minimize: true }));
   // config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'static' }));
