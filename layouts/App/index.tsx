@@ -4,8 +4,7 @@ import loadable from '@loadable/component';
 
 const LogIn = loadable(() => import('@pages/login'));
 const SignUp = loadable(() => import('@pages/signup'));
-const Channel = loadable(() => import('@pages/Channel'));
-const DirectMessage = loadable(() => import('@pages/DirectMessage'));
+const Workspace = loadable(() => import('@layouts/Workspace'));
 
 const Index = () => {
   return (
@@ -13,8 +12,7 @@ const Index = () => {
       <Redirect path='/' to='/login' exact />
       <Route path='/login' component={LogIn} />
       <Route path='/signup' component={SignUp} />
-      <Route path='/workspace/channel' component={Channel} />
-      <Route path='/workspace/dm' component={DirectMessage} />
+      <Route path='/workspace' component={Workspace} />
     </Switch>
   );
 };

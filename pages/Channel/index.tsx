@@ -1,14 +1,11 @@
 import React from 'react';
-import Workspace from '@layouts/Workspace';
 import { Container, Header } from './styles';
 
-const Channel = () => {
+const Channel: React.FC = () => {
   return (
-    <Workspace>
-      <Container>
-        <Header>채널!</Header>
-      </Container>
-    </Workspace>
+    <Container>
+      <Header>채널!</Header>
+    </Container>
   );
 };
 

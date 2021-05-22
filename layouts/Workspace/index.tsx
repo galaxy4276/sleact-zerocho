@@ -1,7 +1,7 @@
-import React, { FC, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import apiClient from '@utils/apliClient';
 import {
   Header,
@@ -15,9 +15,13 @@ import {
   MenuScroll,
 } from './styles';
 import gravatar from 'gravatar';
+import loadable from '@loadable/component';
 
-const Index: FC = ({ children }) => {
-  const { data, error, mutate } = useSWR('/users', fetcher, {
+const Channel = loadable(() => import('@pages/Channel'));
+const DirectMessage = loadable(() => import('@pages/DirectMessage'));
+
+const Index: React.FC = () => {
+  const { data, mutate } = useSWR('/users', fetcher, {
     dedupingInterval: 1000 * 5,
   });
 
@@ -38,7 +42,9 @@ const Index: FC = ({ children }) => {
     <div>
       <Header>
         <RightMenu>
-          <ProfileImg src={gravatar.url(data.email, { s: '28px', d: 'retro' })} alt={data.nickname} />
+          <span>
+            <ProfileImg src={gravatar.url(data.email, { s: '28px', d: 'retro' })} alt={data.nickname} />
+          </span>
         </RightMenu>
       </Header>
       <button onClick={onLogout}>로그아웃</button>
@@ -50,7 +56,12 @@ const Index: FC = ({ children }) => {
             Menu
           </MenuScroll>
         </Channels>
-        {children}
+        <Chats>
+          <Switch>
+            <Route path="/workspace/channel" component={Channel} />
+            <Route path="/workspace/dm" component={DirectMessage} />
+          </Switch>
+        </Chats>
       </WorkspaceWrapper>
     </div>
   );

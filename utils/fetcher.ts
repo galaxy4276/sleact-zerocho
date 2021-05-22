@@ -1,8 +1,11 @@
 import apiClient from '@utils/apliClient';
+import { AxiosResponse } from 'axios';
+
+const getData = (res: AxiosResponse) => res.data;
 
 const fetcher = (url: string) =>
   apiClient.get(url, {
     withCredentials: true,
-  }).then(({ data }) => data);
+  }).then(getData);
 
 export default fetcher;
