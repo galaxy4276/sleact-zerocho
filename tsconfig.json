@@ -11,12 +11,12 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": { // import A from @hooks/modules -> make easy to import
-      "@hooks/*": ["hooks/*"],
-      "@components/*": ["components/*"],
-      "@layouts/*": ["layouts/*"],
-      "@pages/*": ["pages/*"],
-      "@utils/*": ["utils/*"],
-      "@typings/*": ["typings/*"]
+      "@hooks/*": ["./hooks/*"],
+      "@components/*": ["./components/*"],
+      "@layouts/*": ["./layouts/*"],
+      "@pages/*": ["./pages/*"],
+      "@utils/*": ["./utils/*"],
+      "@typings/*": ["./typings/*"]
     }
   }
 }

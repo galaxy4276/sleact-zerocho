@@ -12,19 +12,16 @@ interface Props {
   onChangeNewWorkspace: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const CreateWorkspaceModal: FC<Props> = (
-  {
-    onChangeNewWorkspace,
-    showCreateWorkspaceModal,
-    onChangeNewUrl,
-    onCloseModal,
-    onCreateWorkspace,
-    newUrl,
-    newWorkspace,
-  }
-) => {
-  return (
-    <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
+const CreateWorkspaceModal: FC<Props> = ({
+  onChangeNewWorkspace,
+  showCreateWorkspaceModal,
+  onChangeNewUrl,
+  onCloseModal,
+  onCreateWorkspace,
+  newUrl,
+  newWorkspace,
+}) => (
+  <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
     <form onSubmit={onCreateWorkspace}>
       <Label id="workspace-label">
         <span>워크스페이스 이름</span>
@@ -37,7 +34,6 @@ const CreateWorkspaceModal: FC<Props> = (
       <Button type="submit">생성하기</Button>
     </form>
   </Modal>
-  );
-};  
+);
 
 export default CreateWorkspaceModal;
