@@ -44,7 +44,6 @@ const SignUp = () => {
   const onSubmit = useCallback((e) => {
     e.preventDefault();
     if (!mismatchError && nickname) {
-      console.log('서버로 회원가입하기');
       setSignUpError('');
       setSignUpSuccess(false);
 
@@ -60,10 +59,11 @@ const SignUp = () => {
         .catch((error: AxiosError) => {
           console.log(error.response);
           setSignUpError(error.response?.data);
-        })
-        .finally(() => {});
+        });
     }
   }, [email, nickname, password, passwordCheck, mismatchError]);
+
+  if (userData) return <Redirect to='/workspace/sleact/channel/일반' />;
 
   return (
     <div id='container'>

@@ -3,7 +3,7 @@ import React, { FC, ChangeEvent } from 'react';
 import Modal from './index';
 
 interface Props {
-  showCreateWorkspaceModal: boolean;
+  show: boolean;
   onCloseModal: () => void;
   newWorkspace: string;
   onCreateWorkspace: (e: any) => void;
@@ -14,14 +14,14 @@ interface Props {
 
 const CreateWorkspaceModal: FC<Props> = ({
   onChangeNewWorkspace,
-  showCreateWorkspaceModal,
+  show,
   onChangeNewUrl,
   onCloseModal,
   onCreateWorkspace,
   newUrl,
   newWorkspace,
 }) => (
-  <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
+  <Modal show={show} onCloseModal={onCloseModal}>
     <form onSubmit={onCreateWorkspace}>
       <Label id="workspace-label">
         <span>워크스페이스 이름</span>

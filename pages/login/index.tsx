@@ -43,10 +43,7 @@ const LogIn = () => {
     return <div>로딩중...</div>;
   }
 
-  if (userData && !error) {
-    console.log('로그인 됨', userData);
-    return <Redirect to='/workspace/channel' />;
-  }
+  if (userData && !error) return <Redirect to='/workspace/sleact/channel/일반' />;
 
   return (
     <div id="container">

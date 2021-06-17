@@ -1,4 +1,4 @@
-import React, { useCallback, FC } from 'react';
+import React, { FC, SyntheticEvent } from 'react';
 import { CloseModalButton, CreateModal } from './styles';
 
 interface Props {
@@ -7,9 +7,7 @@ interface Props {
 }
 
 const Modal: FC<Props> = (({ children, show, onCloseModal }) => {
-  const stopPropagation = useCallback((e) => {
-    e.stopPropagation();
-  }, []);
+  const stopPropagation = (e: SyntheticEvent) =>  e.stopPropagation();
 
   if (!show) {
     return null;

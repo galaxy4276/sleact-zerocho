@@ -1,5 +1,5 @@
 import React, {
-  FormEvent, MouseEventHandler, useCallback, useState, VFC,
+  FormEvent, MouseEventHandler, SyntheticEvent, useCallback, useState, VFC,
 } from 'react';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
@@ -10,12 +10,15 @@ import apiClient from '@utils/apliClient';
 import gravatar from 'gravatar';
 import loadable from '@loadable/component';
 import Menu from '@components/Menu';
-import { IUser } from '@typings/db';
+import { IChannel, IUser } from '@typings/db';
 import useInput from '@hooks/useInput';
 import CreateWorkSpaceModal from '@components/Modal/CreateWorkspaceModal';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import CreateChannelModal from '@components/CreateChannelModal';
+import { useParams } from 'react-router';
+import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
+import InviteChannelModal from '@components/InviteChannelModal';
 import {
   Header,
   ProfileImg,
@@ -42,12 +45,17 @@ const WorkSpaces: VFC = () => {
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
   const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
+  const [showInviteWorkspaceModal, setShowInviteWorkspaceModal] = useState(false);
+  const [showInviteChannelModal, setShowInviteChannelModal] = useState(false);
   const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
+
+  const { workspace } = useParams<{ workspace: string }>();
+
   const {
     data: user,
     mutate: userUpdate,
   } = useSWR<IUser | false>('/users', fetcher);
-  console.log('userData: ', user);
+  const { data: channelData } = useSWR<IChannel[]>(user ? `/workspaces/${workspace}/channels` : null, fetcher);
 
   const onLogout = useCallback(() => {
     apiClient
@@ -55,7 +63,7 @@ const WorkSpaces: VFC = () => {
       .then(() => userUpdate(false, false));
   }, []);
 
-  const onClickUserProfile = useCallback((e) => {
+  const onClickUserProfile = useCallback((e: SyntheticEvent) => {
     e.stopPropagation();
     setShowUserMenu((prev) => !prev);
   }, []);
@@ -90,10 +98,13 @@ const WorkSpaces: VFC = () => {
   const onCloseModal = useCallback(() => {
     setShowCreateWorkspaceModal(false);
     setShowCreateChannelModal(false);
+    setShowInviteWorkspaceModal(false);
+    setShowInviteWorkspaceModal(false);
   }, []);
 
   const toggleWorkspaceModal = () => setShowWorkspaceModal((prev) => !prev);
   const onClickAddChannel = () => setShowCreateChannelModal(true);
+  // const onClickInviteWorkspace () => setShowInviteWorkspaceModal(true);
 
   if (!user) return <Redirect to="/login" />;
 
@@ -137,17 +148,20 @@ const WorkSpaces: VFC = () => {
                 <button type="button" onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
+            {channelData?.map((v) => (
+              <div>{v.name}</div>
+            ))}
           </MenuScroll>
         </Channels>
         <Chats>
           <Switch>
-            <Route path="/workspace/channel" component={Channel} />
-            <Route path="/workspace/dm" component={DirectMessage} />
+            <Route path="/workspace/channel/:channel" component={Channel} />
+            <Route path="/workspace/dm/:id" component={DirectMessage} />
           </Switch>
         </Chats>
       </WorkspaceWrapper>
       <CreateWorkSpaceModal
-        showCreateWorkspaceModal={showCreateWorkspaceModal}
+        show={showCreateWorkspaceModal}
         newWorkspace={newWorkspace}
         newUrl={newUrl}
         onChangeNewUrl={onChangeNewUrl}
@@ -159,6 +173,16 @@ const WorkSpaces: VFC = () => {
         show={showCreateChannelModal}
         onCloseModal={onCloseModal}
         setShowCreateChannelModal={setShowCreateChannelModal}
+      />
+      <InviteWorkspaceModal
+        show={showInviteWorkspaceModal}
+        onCloseModal={onCloseModal}
+        setShowInviteWorkspaceModal={setShowInviteWorkspaceModal}
+      />
+      <InviteChannelModal
+        show={showInviteChannelModal}
+        onCloseModal={onCloseModal}
+        setShowInviteChannelModal={setShowInviteChannelModal}
       />
     </div>
   );
