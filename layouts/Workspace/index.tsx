@@ -1,5 +1,5 @@
 import React, {
-  FormEvent, MouseEventHandler, SyntheticEvent, useCallback, useState, VFC,
+  FormEvent, SyntheticEvent, useCallback, useState, VFC,
 } from 'react';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
@@ -19,6 +19,8 @@ import CreateChannelModal from '@components/CreateChannelModal';
 import { useParams } from 'react-router';
 import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
+import DMList from '@components/DMList';
+import ChannelList from '@components/ChannelList';
 import {
   Header,
   ProfileImg,
@@ -39,6 +41,13 @@ import {
 const Channel = loadable(() => import('@pages/Channel'));
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
 
+export const userDataInitialProps = {
+  id: 0,
+  nickname: '',
+  email: '',
+  Workspaces: [],
+};
+
 const WorkSpaces: VFC = () => {
   const [showUserMenu, setShowUserMenu] = useState<boolean>(false);
   const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState<boolean>(false);
@@ -52,10 +61,11 @@ const WorkSpaces: VFC = () => {
   const { workspace } = useParams<{ workspace: string }>();
 
   const {
-    data: user,
+    data: userData = userDataInitialProps,
     mutate: userUpdate,
   } = useSWR<IUser | false>('/users', fetcher);
-  const { data: channelData } = useSWR<IChannel[]>(user ? `/workspaces/${workspace}/channels` : null, fetcher);
+  const { data: channelData } = useSWR<IChannel[]>(userData ? `/workspaces/${workspace}/channels` : null, fetcher);
+  const { data: memberData } = useSWR<IUser[]>(userData ? `/workspaces/${workspace}/members` : null, fetcher);
 
   const onLogout = useCallback(() => {
     apiClient
@@ -104,22 +114,22 @@ const WorkSpaces: VFC = () => {
 
   const toggleWorkspaceModal = () => setShowWorkspaceModal((prev) => !prev);
   const onClickAddChannel = () => setShowCreateChannelModal(true);
-  // const onClickInviteWorkspace () => setShowInviteWorkspaceModal(true);
+  const onClickInviteWorkspace = () => setShowInviteWorkspaceModal(true);
 
-  if (!user) return <Redirect to="/login" />;
+  if (!userData) return <Redirect to="/login" />;
 
   return (
     <div>
       <Header>
         <RightMenu>
           <span aria-hidden onClick={onClickUserProfile}>
-            <ProfileImg src={gravatar.url(user.email, { s: '28px', d: 'retro' })} alt={user.nickname} />
+            <ProfileImg src={gravatar.url(userData.email, { s: '28px', d: 'retro' })} alt={userData.nickname} />
             {showUserMenu && (
               <Menu style={{ right: 0, top: 38 }} show={showUserMenu} onCloseModal={onClickUserProfile}>
                 <ProfileModal>
-                  <img src={gravatar.url(user.email, { s: '36px', d: 'retro' })} alt={user.nickname} />
+                  <img src={gravatar.url(userData.email, { s: '36px', d: 'retro' })} alt={userData.nickname} />
                   <div>
-                    <span id="profile-name">{user.nickname}</span>
+                    <span id="profile-name">{userData.nickname}</span>
                     <span id="profile-active">Active</span>
                   </div>
                 </ProfileModal>
@@ -131,7 +141,7 @@ const WorkSpaces: VFC = () => {
       </Header>
       <WorkspaceWrapper>
         <Workspaces>
-           {user.Workspaces && user.Workspaces.map((ws) => (
+           {userData.Workspaces?.map((ws) => (
             <Link key={ws.id} to={`/workspace/${123}/channel/일반`}>
               <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
             </Link>
@@ -144,19 +154,19 @@ const WorkSpaces: VFC = () => {
             <Menu show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal} style={{ top: 95, left: 80 }}>
               <WorkspaceModal>
                 <h2>Sleact</h2>
+                <button type="button" onClick={onClickInviteWorkspace}>워크스페이스에 사용자 초대</button>
                 <button type="button" onClick={onClickAddChannel}>채널 만들기</button>
                 <button type="button" onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
-            {channelData?.map((v) => (
-              <div>{v.name}</div>
-            ))}
+             <ChannelList />
+            <DMList />
           </MenuScroll>
         </Channels>
         <Chats>
           <Switch>
-            <Route path="/workspace/channel/:channel" component={Channel} />
-            <Route path="/workspace/dm/:id" component={DirectMessage} />
+            <Route path="/workspace/:workspace/channel/:channel" component={Channel} />
+            <Route path="/workspace/:workspace/dm/:id" component={DirectMessage} />
           </Switch>
         </Chats>
       </WorkspaceWrapper>

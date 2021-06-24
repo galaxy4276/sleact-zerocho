@@ -1,6 +1,6 @@
 import Modal from '@components/Modal';
 import useInput from '@hooks/useInput';
-import { Button, Input, Label } from '@pages/SignUp/styles';
+import { Button, Input, Label } from '@pages/signup/styles';
 import { IUser } from '@typings/db';
 import fetcher from '@utils/fetcher';
 import React, { FC, useCallback } from 'react';
